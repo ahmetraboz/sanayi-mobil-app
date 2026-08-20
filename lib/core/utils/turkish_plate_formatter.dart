@@ -1,6 +1,10 @@
 import 'package:flutter/services.dart';
 
-/// Türkiye Plaka Formatlayıcı (34abc123 -> 34 ABC 123)
+/// Türkiye Plaka Formatlayıcı
+/// Kural:
+/// 1. İl Kodu: Tam olarak 2 rakam (01-81). 3. bir rakam yazılmasına izin verilmez, sadece harfe geçilebilir!
+/// 2. Harf Grubu: 1-5 harf (Özel plaka destekli). Harf bitince rakama geçilebilir.
+/// 3. Rakam Grubu: 2-4 rakam.
 class TurkishPlateInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -11,8 +15,13 @@ class TurkishPlateInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    // 1. Türkçe karakterleri İngilizce eşdeğerine çevir ve büyük harf yap
-    String raw = newValue.text
+    // Kullanıcı geri silme (Backspace) yapıyorsa serbest bırak
+    if (oldValue.text.length > newValue.text.length) {
+      return newValue;
+    }
+
+    // 1. Türkçe karakterleri standartlaştır ve büyük harfe çevir
+    String clean = newValue.text
         .toUpperCase()
         .replaceAll('Ğ', 'G')
         .replaceAll('Ü', 'U')
@@ -20,18 +29,14 @@ class TurkishPlateInputFormatter extends TextInputFormatter {
         .replaceAll('İ', 'I')
         .replaceAll('Ö', 'O')
         .replaceAll('Ç', 'C')
-        .replaceAll(RegExp(r'[^A-Z0-9]'), ''); // Sadece harf ve rakamları tut
+        .replaceAll(RegExp(r'[^A-Z0-9]'), ''); // Sadece harf ve rakam tut
 
-    if (raw.isEmpty) {
+    if (clean.isEmpty) {
       return const TextEditingValue();
     }
 
-    // 2. Maksimum plaka ham uzunluğu 8 karakterdir (örn: 34ABC1234)
-    if (raw.length > 8) {
-      raw = raw.substring(0, 8);
-    }
-
-    final formatted = _formatPlate(raw);
+    // 2. Akıllı Plaka Dizilimini Oluştur
+    final formatted = _buildSmartPlate(clean);
 
     return TextEditingValue(
       text: formatted,
@@ -39,54 +44,70 @@ class TurkishPlateInputFormatter extends TextInputFormatter {
     );
   }
 
-  static String _formatPlate(String raw) {
+  /// Karakterleri sırasıyla Plaka Kurallarına (2 Rakam + 1-5 Harf + 2-4 Rakam) göre yerleştirir
+  static String _buildSmartPlate(String raw) {
     final buffer = StringBuffer();
+    int index = 0;
 
-    // 1. Kısım: İl Kodu (İlk 2 rakam)
-    int i = 0;
-    while (i < raw.length && i < 2 && RegExp(r'\d').hasMatch(raw[i])) {
-      buffer.write(raw[i]);
-      i++;
+    // 1. AŞAMA: İlk 2 Rakam (İl Kodu)
+    int cityDigits = 0;
+    while (index < raw.length && cityDigits < 2) {
+      final char = raw[index];
+      if (RegExp(r'\d').hasMatch(char)) {
+        buffer.write(char);
+        cityDigits++;
+      }
+      index++;
     }
 
-    if (i >= raw.length) return buffer.toString();
+    if (cityDigits == 0) return '';
 
-    // Eğer il kodundan sonra harfler başlıyorsa boşluk ekle
-    if (buffer.length == 2 && RegExp(r'[A-Z]').hasMatch(raw[i])) {
-      buffer.write(' ');
+    // İlk 2 rakamdan sonra gelen fazlalık rakamları atla, harfe kadar ilerle
+    while (index < raw.length && RegExp(r'\d').hasMatch(raw[index])) {
+      index++;
     }
 
-    // 2. Kısım: Harf Grubu (1 - 3 Harf)
+    if (index >= raw.length) return buffer.toString();
+
+    // 2. AŞAMA: Harf Grubu (1 - 5 Harf)
     int letterCount = 0;
-    while (i < raw.length && letterCount < 3 && RegExp(r'[A-Z]').hasMatch(raw[i])) {
-      buffer.write(raw[i]);
-      i++;
-      letterCount++;
+    bool spaceAdded = false;
+
+    while (index < raw.length && letterCount < 5) {
+      final char = raw[index];
+      if (RegExp(r'[A-Z]').hasMatch(char)) {
+        if (!spaceAdded) {
+          buffer.write(' ');
+          spaceAdded = true;
+        }
+        buffer.write(char);
+        letterCount++;
+        index++;
+      } else {
+        // Rakam gelirse harf grubu bitmiştir
+        break;
+      }
     }
 
-    if (i >= raw.length) return buffer.toString();
+    if (letterCount == 0 || index >= raw.length) return buffer.toString();
 
-    // Eğer harflerden sonra rakamlar başlıyorsa boşluk ekle
-    if (letterCount > 0 && RegExp(r'\d').hasMatch(raw[i])) {
-      buffer.write(' ');
-    }
+    // 3. AŞAMA: Son Rakam Grubu (2 - 4 Rakam)
+    int trailingDigits = 0;
+    bool trailingSpaceAdded = false;
 
-    // 3. Kısım: Son Rakam Grubu (2 - 4 Rakam)
-    int digitCount = 0;
-    while (i < raw.length && digitCount < 4 && RegExp(r'\d').hasMatch(raw[i])) {
-      buffer.write(raw[i]);
-      i++;
-      digitCount++;
+    while (index < raw.length && trailingDigits < 4) {
+      final char = raw[index];
+      if (RegExp(r'\d').hasMatch(char)) {
+        if (!trailingSpaceAdded) {
+          buffer.write(' ');
+          trailingSpaceAdded = true;
+        }
+        buffer.write(char);
+        trailingDigits++;
+      }
+      index++;
     }
 
     return buffer.toString();
-  }
-
-  /// Geçerli bir Türk plakası mı kontrol eder
-  static bool isValidTurkishPlate(String plate) {
-    final clean = plate.trim().toUpperCase();
-    // Regex: 01-81 il kodu, 1-3 harf, 2-4 rakam
-    final regex = RegExp(r'^(0[1-9]|[1-7][0-9]|8[01])\s[A-Z]{1,3}\s\d{2,4}$');
-    return regex.hasMatch(clean);
   }
 }

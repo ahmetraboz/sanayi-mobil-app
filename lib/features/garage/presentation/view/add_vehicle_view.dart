@@ -7,11 +7,12 @@ import 'package:sanayi_mobil_app/core/constants/app_dimensions.dart';
 import 'package:sanayi_mobil_app/core/utils/thousand_input_formatter.dart';
 import 'package:sanayi_mobil_app/core/utils/turkish_number_helper.dart';
 import 'package:sanayi_mobil_app/core/utils/turkish_plate_formatter.dart';
+import 'package:sanayi_mobil_app/core/widgets/cupertino_year_picker_bottom_sheet.dart';
 import 'package:sanayi_mobil_app/core/widgets/searchable_picker_bottom_sheet.dart';
 import '../cubit/garage_cubit.dart';
 import '../cubit/garage_state.dart';
 
-/// Araç Ekleme Ekranı (Otomatik Plaka & Kilometre Formatlamalı)
+/// Araç Ekleme Ekranı (Akıllı Plaka Boşluklandırma & Kilometre Formatlamalı)
 class AddVehicleView extends StatefulWidget {
   const AddVehicleView({super.key});
 
@@ -90,6 +91,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   @override
   void initState() {
     super.initState();
+
     _mileageController.addListener(() {
       final parsed = ThousandsSeparatorInputFormatter.parseToInt(_mileageController.text);
       if (parsed != _currentMileageNumber) {
@@ -196,7 +198,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
                   const SizedBox(height: 20),
 
-                  // 2. Plaka Alanı (Otomatik Akıllı Boşluk ve Büyük Harf Formatlama)
+                  // 2. Plaka Alanı (Canlı Sayı-Harf Geçişli Akıllı Boşluklandırma)
                   _buildInputLabel('Plaka'),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -208,19 +210,19 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 1.5,
+                      letterSpacing: 1.2,
                       color: AppColors.textPrimary,
                     ),
                     decoration: _inputDecoration(
-                      hintText: '34 SAN 2026',
+                      hintText: 'Örn: 34 SAN 2026 veya 34 AHMET 01',
                       prefixIcon: Icons.featured_play_list_outlined,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return 'Lütfen aracınızın plakasını girin';
                       }
-                      if (value.trim().length < 6) {
-                        return 'Lütfen geçerli bir plaka formatı girin (örn: 34 ABC 123)';
+                      if (value.trim().length < 5) {
+                        return 'Lütfen geçerli bir plaka girin';
                       }
                       return null;
                     },
@@ -291,19 +293,17 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
                   const SizedBox(height: 16),
 
-                  // 5. Yıl Seçimi (Searchable Bottom Sheet)
+                  // 5. Yıl Seçimi (iPhone Cupertino Çark Seçici)
                   AppPickerField(
                     label: 'Yıl',
                     value: _selectedYear,
                     hintText: 'Yıl seçiniz',
                     prefixIcon: LucideIcons.calendar,
                     onTap: () async {
-                      final selected = await SearchablePickerBottomSheet.show(
+                      final selected = await CupertinoYearPickerBottomSheet.show(
                         context: context,
-                        title: 'Model Yılı Seçiniz',
-                        items: _years,
-                        selectedItem: _selectedYear,
-                        searchHint: 'Yıl ara (örn: 2023)...',
+                        years: _years,
+                        initialYear: _selectedYear,
                       );
 
                       if (selected != null) {
