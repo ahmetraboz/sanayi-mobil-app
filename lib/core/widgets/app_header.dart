@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanayi_mobil_app/features/notifications/presentation/view/notification_view.dart';
+import 'package:sanayi_mobil_app/features/profile/presentation/view/profile_view.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
 
@@ -87,10 +89,10 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   hasBadge: true,
                   onTap: onNotificationTap ??
                       () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Bildirimler yakında eklenecek'),
-                            behavior: SnackBarBehavior.floating,
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationView(),
                           ),
                         );
                       },
@@ -100,10 +102,10 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                   icon: LucideIcons.user,
                   onTap: onProfileTap ??
                       () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Profil detayları yakında'),
-                            behavior: SnackBarBehavior.floating,
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileView(),
                           ),
                         );
                       },

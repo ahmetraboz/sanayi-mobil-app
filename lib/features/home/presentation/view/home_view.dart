@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_dimensions.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/widgets/app_header.dart';
+import 'package:sanayi_mobil_app/core/constants/app_colors.dart';
+import 'package:sanayi_mobil_app/core/constants/app_dimensions.dart';
+import 'package:sanayi_mobil_app/core/di/service_locator.dart';
+import 'package:sanayi_mobil_app/core/widgets/app_header.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import 'widgets/campaign_slider_widget.dart';
+import 'widgets/location_bar_widget.dart';
 import 'widgets/services_grid_widget.dart';
 
 /// Ana Sayfa Görünümü (MVVM - View Katmanı)
@@ -71,9 +72,14 @@ class _HomeViewBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: AppDimensions.p12),
+                  const SizedBox(height: 6),
 
-                  // 1. Kampanya Slider
+                  // 1. Üst Yatay Konum Seçim Çubuğu (Banner Üstü)
+                  const LocationBarWidget(),
+
+                  const SizedBox(height: AppDimensions.p16),
+
+                  // 2. Kampanya Slider
                   CampaignSliderWidget(
                     banners: state.banners,
                     onPageChanged: (index) {
@@ -83,7 +89,7 @@ class _HomeViewBody extends StatelessWidget {
 
                   const SizedBox(height: AppDimensions.p24),
 
-                  // 2. Hizmetler Grid
+                  // 3. Hizmetler Grid
                   ServicesGridWidget(
                     services: state.services,
                     onServiceSelected: (service) {
@@ -93,7 +99,7 @@ class _HomeViewBody extends StatelessWidget {
 
                   const SizedBox(height: AppDimensions.p32),
 
-                  // 3. Alt Acil Durum / Bilgi Kartı
+                  // 4. Alt Acil Durum / Bilgi Kartı
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppDimensions.p20),
                     child: Container(
