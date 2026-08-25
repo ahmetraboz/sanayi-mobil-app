@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:sanayi_mobil_app/core/constants/app_colors.dart';
 import 'package:sanayi_mobil_app/core/constants/app_dimensions.dart';
+import '../select_location_view.dart';
 
 /// Ana Sayfa Üst Konum Seçim Çubuğu
 class LocationBarWidget extends StatefulWidget {
@@ -10,7 +11,7 @@ class LocationBarWidget extends StatefulWidget {
 
   const LocationBarWidget({
     super.key,
-    this.initialLocation = 'Maslak Mah. Atatürk Oto Sanayi, İstanbul',
+    this.initialLocation = 'Meram, Konya',
     this.onTap,
   });
 
@@ -37,7 +38,7 @@ class _LocationBarWidgetState extends State<LocationBarWidget> {
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap ?? () => _showLocationPicker(context),
+        onTap: widget.onTap ?? () => _openSelectLocationView(context),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -125,101 +126,21 @@ class _LocationBarWidgetState extends State<LocationBarWidget> {
     );
   }
 
-  void _showLocationPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+  void _openSelectLocationView(BuildContext context) async {
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SelectLocationView(
+          initialLocation: _currentLocation,
+        ),
       ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.divider,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'Hizmet / Teslimat Konumu Seçin',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'Size en yakın anlaşmalı usta, servis ve yol yardımı noktalarını listelemek için konum belirleyin.',
-                  style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                ),
-                const SizedBox(height: 20),
-
-                // Mevcut GPS Konumu
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(LucideIcons.navigation, color: AppColors.primary, size: 20),
-                  ),
-                  title: const Text(
-                    'Mevcut GPS Konumumu Kullan',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                  ),
-                  subtitle: const Text('Anlık konum tespiti', style: TextStyle(fontSize: 12)),
-                  onTap: () {
-                    setState(() {
-                      _currentLocation = 'Kadıköy / İstanbul (Mevcut Konum)';
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-
-                const Divider(height: 16),
-
-                // Kayıtlı Sanayi Noktası
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(LucideIcons.mapPin, color: AppColors.textPrimary, size: 20),
-                  ),
-                  title: const Text(
-                    'Maslak Atatürk Oto Sanayi Sitesi',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                  ),
-                  subtitle: const Text('Sarıyer / İstanbul', style: TextStyle(fontSize: 12)),
-                  onTap: () {
-                    setState(() {
-                      _currentLocation = 'Maslak Mah. Atatürk Oto Sanayi, İstanbul';
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
+
+    if (result != null && result.isNotEmpty) {
+      setState(() {
+        _currentLocation = result;
+      });
+    }
   }
 }
+

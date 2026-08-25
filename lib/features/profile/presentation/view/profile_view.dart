@@ -9,8 +9,19 @@ import '../cubit/profile_state.dart';
 import 'widgets/profile_header_card.dart';
 import 'widgets/profile_menu_group.dart';
 import 'widgets/profile_menu_item.dart';
+import 'account_info_view.dart';
+import 'subviews/user_services_view.dart';
+import 'subviews/service_points_view.dart';
+import 'subviews/user_referrals_view.dart';
+import 'subviews/user_addresses_view.dart';
+import 'subviews/user_cards_view.dart';
+import 'subviews/language_settings_view.dart';
+import 'subviews/notification_settings_view.dart';
+import 'subviews/about_sanayigo_view.dart';
+import 'subviews/faq_view.dart';
+import 'subviews/support_center_view.dart';
 
-/// Profil Görünümü (Rabam Tasarımına Birebir Uygun)
+/// Profil Görünümü (Tüm Menü Öğeleri Aktif & Fonksiyonel)
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -77,7 +88,18 @@ class _ProfileViewBody extends StatelessWidget {
                       icon: LucideIcons.edit3,
                       title: 'Hesap Bilgileri',
                       subtitle: 'Kullanıcı bilgilerinin yönetimi',
-                      onTap: () => _showComingSoon(context, 'Hesap Bilgileri'),
+                      onTap: () {
+                        final cubit = context.read<ProfileCubit>();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider.value(
+                              value: cubit,
+                              child: AccountInfoView(user: user),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -91,25 +113,34 @@ class _ProfileViewBody extends StatelessWidget {
                       icon: LucideIcons.wrench,
                       title: 'Hizmetlerim',
                       subtitle: 'Randevu ve servis takibi',
-                      onTap: () => _showComingSoon(context, 'Hizmetlerim'),
-                    ),
-                    ProfileMenuItem(
-                      icon: LucideIcons.fuel,
-                      title: 'Yakıt Kullanımım',
-                      subtitle: 'Aylık tüketim detayları',
-                      onTap: () => _showComingSoon(context, 'Yakıt Kullanımım'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const UserServicesView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.compass,
                       title: 'Hizmet Noktalarım',
                       subtitle: 'En yakın servis ve bayiler',
-                      onTap: () => _showComingSoon(context, 'Hizmet Noktalarım'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const ServicePointsView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.share2,
                       title: 'Referanslarım',
                       subtitle: 'Referans geçmişinizi görüntüleyin',
-                      onTap: () => _showComingSoon(context, 'Referanslarım'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => UserReferralsView(referralCode: user.referralCode)),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -123,25 +154,45 @@ class _ProfileViewBody extends StatelessWidget {
                       icon: LucideIcons.mapPin,
                       title: 'Adreslerim',
                       subtitle: 'Kayıtlı adres bilgilerim',
-                      onTap: () => _showComingSoon(context, 'Adreslerim'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const UserAddressesView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.creditCard,
                       title: 'Kredi Kartlarım',
                       subtitle: 'Ödeme yöntemlerim',
-                      onTap: () => _showComingSoon(context, 'Kredi Kartlarım'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const UserCardsView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: Icons.translate_rounded,
                       title: 'Dil',
                       subtitle: 'Uygulama dil tercihi',
-                      onTap: () => _showComingSoon(context, 'Dil Tercihleri'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LanguageSettingsView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.bell,
                       title: 'Bildirim Ayarları',
                       subtitle: 'Tercihler ve duyurular',
-                      onTap: () => _showComingSoon(context, 'Bildirim Ayarları'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotificationSettingsView()),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -155,19 +206,34 @@ class _ProfileViewBody extends StatelessWidget {
                       icon: LucideIcons.info,
                       title: 'SanayiGO Hakkında',
                       subtitle: 'SanayiGO hakkında detaylı bilgi',
-                      onTap: () => _showComingSoon(context, 'SanayiGO Hakkında'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const AboutSanayiGoView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.messageSquare,
                       title: 'SSS',
                       subtitle: 'Sıkça sorulan sorular',
-                      onTap: () => _showComingSoon(context, 'Sıkça Sorulan Sorular'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const FaqView()),
+                        );
+                      },
                     ),
                     ProfileMenuItem(
                       icon: LucideIcons.headphones,
                       title: 'Destek',
                       subtitle: 'Yardım için destek ekibimizle iletişime geçin',
-                      onTap: () => _showComingSoon(context, 'Destek'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const SupportCenterView()),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -180,20 +246,25 @@ class _ProfileViewBody extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Çıkış Yap'),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        title: const Text('Çıkış Yap', style: TextStyle(fontWeight: FontWeight.w800)),
                         content: const Text('Hesabınızdan çıkış yapmak istediğinize emin misiniz?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('İptal'),
+                            child: const Text('İptal', style: TextStyle(color: Color(0xFF64748B))),
                           ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.error,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              elevation: 0,
+                            ),
                             onPressed: () {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
-                            child: const Text('Çıkış Yap'),
+                            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
                           ),
                         ],
                       ),
@@ -226,15 +297,6 @@ class _ProfileViewBody extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, String title) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$title modülü yakında eklenecek'),
-        behavior: SnackBarBehavior.floating,
       ),
     );
   }

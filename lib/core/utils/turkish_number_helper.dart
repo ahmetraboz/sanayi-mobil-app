@@ -5,6 +5,19 @@ class TurkishNumberHelper {
   static const List<String> _birler = ['', 'Bir', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz'];
   static const List<String> _onlar = ['', 'On', 'Yirmi', 'Otuz', 'Kırk', 'Elli', 'Altmış', 'Yetmiş', 'Seksen', 'Doksan'];
 
+  /// Sayıyı noktalı formata dönüştürür (145000 -> 145.000)
+  static String formatWithDot(int number) {
+    final chars = number.toString().split('').reversed.toList();
+    final buffer = StringBuffer();
+    for (int i = 0; i < chars.length; i++) {
+      if (i > 0 && i % 3 == 0) {
+        buffer.write('.');
+      }
+      buffer.write(chars[i]);
+    }
+    return buffer.toString().split('').reversed.join('');
+  }
+
   static String toTurkishWords(int number) {
     if (number == 0) return 'Sıfır';
     if (number < 0) return 'Eksi ${toTurkishWords(-number)}';

@@ -14,7 +14,9 @@ class AppDimensions {
   static const double p32 = 32.0;
 
   // Border Radius
+  static const double r6 = 6.0;
   static const double r8 = 8.0;
+  static const double r10 = 10.0;
   static const double r12 = 12.0;
   static const double r16 = 16.0;
   static const double r20 = 20.0;

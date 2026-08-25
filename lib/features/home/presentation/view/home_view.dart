@@ -4,6 +4,7 @@ import 'package:sanayi_mobil_app/core/constants/app_colors.dart';
 import 'package:sanayi_mobil_app/core/constants/app_dimensions.dart';
 import 'package:sanayi_mobil_app/core/di/service_locator.dart';
 import 'package:sanayi_mobil_app/core/widgets/app_header.dart';
+import 'package:sanayi_mobil_app/features/service_booking/presentation/view/service_vehicle_selection_sheet.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import 'widgets/campaign_slider_widget.dart';
@@ -47,7 +48,7 @@ class _HomeViewBody extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.error_outline, size: 48, color: AppColors.error),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Text(
                     state.errorMessage ?? 'Bir hata oluştu',
                     style: const TextStyle(color: AppColors.textSecondary),
@@ -72,9 +73,9 @@ class _HomeViewBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppDimensions.p12),
 
-                  // 1. Üst Yatay Konum Seçim Çubuğu (Banner Üstü)
+                  // 1. Hizmet Bölgesi / Konum Çubuğu
                   const LocationBarWidget(),
 
                   const SizedBox(height: AppDimensions.p16),
@@ -93,7 +94,7 @@ class _HomeViewBody extends StatelessWidget {
                   ServicesGridWidget(
                     services: state.services,
                     onServiceSelected: (service) {
-                      _showServiceDetailBottomSheet(context, service.title);
+                      ServiceVehicleSelectionSheet.show(context, serviceTitle: service.title);
                     },
                   ),
 
@@ -108,23 +109,30 @@ class _HomeViewBody extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             AppColors.primary.withValues(alpha: 0.08),
-                            AppColors.primaryLight.withValues(alpha: 0.12),
+                            AppColors.primaryLight.withValues(alpha: 0.15),
                           ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(AppDimensions.r16),
+                        borderRadius: BorderRadius.circular(AppDimensions.r20),
                         border: Border.all(
                           color: AppColors.primary.withValues(alpha: 0.2),
+                          width: 1,
                         ),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(AppDimensions.r12),
+                              borderRadius: BorderRadius.circular(AppDimensions.r16),
                             ),
-                            child: const Icon(Icons.shield_outlined, color: Colors.white, size: 22),
+                            child: const Icon(
+                              Icons.headset_mic_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
                           const SizedBox(width: 14),
                           const Expanded(
@@ -132,16 +140,16 @@ class _HomeViewBody extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Garantili Sanayi Hizmeti',
+                                  '7/24 Yol Yardım ve Destek',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
                                     color: AppColors.textPrimary,
                                   ),
                                 ),
-                                SizedBox(height: 2),
+                                SizedBox(height: 3),
                                 Text(
-                                  'Tüm işlemler SanayiGO güvencesiyle 1 yıl garantilidir.',
+                                  'Yolda mı kaldınız? Tek tıkla acil çekici çağırın.',
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: AppColors.textSecondary,
@@ -155,68 +163,13 @@ class _HomeViewBody extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 100), // Bottom nav bar için boşluk
+                  const SizedBox(height: 120),
                 ],
               ),
             ),
           );
         },
       ),
-    );
-  }
-
-  void _showServiceDetailBottomSheet(BuildContext context, String serviceName) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.divider,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  serviceName.replaceAll('\n', ' '),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Bu hizmet için yakınınızdaki anlaşmalı servis noktaları ve randevu seçenekleri listeleniyor...',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Randevu & Teklif Al'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

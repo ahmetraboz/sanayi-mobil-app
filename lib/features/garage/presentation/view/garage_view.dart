@@ -9,6 +9,7 @@ import 'package:sanayi_mobil_app/features/garage/data/models/vehicle_model.dart'
 import '../cubit/garage_cubit.dart';
 import '../cubit/garage_state.dart';
 import 'add_vehicle_view.dart';
+import 'vehicle_detail_view.dart';
 
 /// Garajım Görünümü (MVVM - Canlı Araç Listeleme & Ekleme Bağlantılı)
 class GarageView extends StatelessWidget {
@@ -130,76 +131,102 @@ class _GarageViewBody extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(AppDimensions.p16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppDimensions.r20),
         boxShadow: AppDimensions.cardShadow,
         border: Border.all(color: AppColors.divider.withValues(alpha: 0.8)),
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
-                  borderRadius: BorderRadius.circular(AppDimensions.r12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppDimensions.r20),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppDimensions.r20),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<GarageCubit>(),
+                  child: VehicleDetailView(vehicleId: vehicle.id),
                 ),
-                child: Icon(typeIcon, color: AppColors.primary, size: 24),
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimensions.p16),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Text(
-                      vehicle.plate,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                        letterSpacing: 0.5,
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryContainer,
+                        borderRadius: BorderRadius.circular(AppDimensions.r12),
+                      ),
+                      child: Icon(typeIcon, color: AppColors.primary, size: 24),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                vehicle.plate,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              const Icon(LucideIcons.chevronRight, size: 16, color: AppColors.primary),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            vehicle.displayName,
+                            style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      vehicle.displayName,
-                      style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                    IconButton(
+                      icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.textTertiary),
+                      onPressed: () {
+                        _showDeleteConfirmDialog(context, vehicle);
+                      },
                     ),
                   ],
                 ),
-              ),
-              IconButton(
-                icon: const Icon(LucideIcons.trash2, size: 18, color: AppColors.textTertiary),
-                onPressed: () {
-                  _showDeleteConfirmDialog(context, vehicle);
-                },
-              ),
-            ],
+                const Divider(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _VehicleStat(
+                      label: 'Son Bakım',
+                      value: vehicle.lastMaintenanceKm ?? '${vehicle.mileage} KM',
+                    ),
+                    _VehicleStat(
+                      label: 'Muayene',
+                      value: vehicle.inspectionDate ?? '14.11.2026',
+                    ),
+                    _VehicleStat(
+                      label: 'Kasko Durumu',
+                      value: vehicle.isInsuranceActive ? 'Aktif' : 'Pasif',
+                      isSuccess: vehicle.isInsuranceActive,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const Divider(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _VehicleStat(
-                label: 'Son Bakım',
-                value: vehicle.lastMaintenanceKm ?? '${vehicle.mileage} KM',
-              ),
-              _VehicleStat(
-                label: 'Muayene',
-                value: vehicle.inspectionDate ?? '14.11.2026',
-              ),
-              _VehicleStat(
-                label: 'Kasko Durumu',
-                value: vehicle.isInsuranceActive ? 'Aktif' : 'Pasif',
-                isSuccess: vehicle.isInsuranceActive,
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

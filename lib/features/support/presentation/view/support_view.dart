@@ -13,7 +13,13 @@ class SupportView extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: const AppHeader(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppDimensions.p20),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(
+          AppDimensions.p20,
+          AppDimensions.p16,
+          AppDimensions.p20,
+          120, // Floating Bottom Nav Bar için güvenli alan
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

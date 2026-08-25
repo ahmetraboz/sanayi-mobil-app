@@ -17,6 +17,18 @@ class HomeMockDataSource {
         giftHighlight: '1.000 TL HEDİYE',
         badgeText: '5 AY GEÇERLİ',
         imageUrl: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1200&q=80',
+        detailTitle: "5'li Yıkama Paketi",
+        detailDescription:
+            'Nasıl Kullanılır?\n\nAnlaşmalı tüm istasyon ve oto kuaförlerde geçerli olan bu dev paketi SanayiGO üzerinden kolayca kullanabilirsiniz.',
+        detailSteps: [
+          'SanayiGO uygulamasını açın.',
+          'Araç Yıkama sekmesine gidin.',
+          'Yakınınızdaki anlaşmalı istasyonu seçin.',
+          'Ödeme sırasında "İND1000" kodunu girin.',
+          '5 yıkama hakkınızı dilediğiniz zaman kullanın.',
+          '1.000 TL yakıt hediyeniz hesabınıza otomatik yüklenir.',
+        ],
+        ctaText: 'Hizmet Al',
       ),
       CampaignBannerModel(
         id: 'banner_2',
@@ -27,6 +39,18 @@ class HomeMockDataSource {
         giftHighlight: 'Ücretsiz Check-Up',
         badgeText: 'SINIRLI SÜRE',
         imageUrl: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=1200&q=80',
+        detailTitle: 'Periyodik Bakım İndirimi',
+        detailDescription:
+            'Nasıl Kullanılır?\n\nOrijinal parça ve işçilik garantili periyodik bakımı yetkili sanayi ustalarına yaptırın, %30 indirim kazanın.',
+        detailSteps: [
+          'SanayiGO uygulamasını açın.',
+          'Bakım & Servis sekmesine gidin.',
+          'Yakınınızdaki yetkili servisi seçin.',
+          'Randevu oluşturun ve "BAKIM30" kodunu ekleyin.',
+          'Servis sonrası ücretsiz araç check-up raporunuzu alın.',
+          'Fatura tutarınızdan %30 indirim otomatik düşülür.',
+        ],
+        ctaText: 'Randevu Al',
       ),
       CampaignBannerModel(
         id: 'banner_3',
@@ -37,6 +61,18 @@ class HomeMockDataSource {
         giftHighlight: 'Balans Hediyeli',
         badgeText: 'YENİ SEZON',
         imageUrl: 'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?auto=format&fit=crop&w=1200&q=80',
+        detailTitle: 'Lastik Değişimi & Otel',
+        detailDescription:
+            'Nasıl Kullanılır?\n\n4 adet lastik değişiminde ücretsiz balans ve 1 sezon lastik oteli hizmetinden yararlanın.',
+        detailSteps: [
+          'SanayiGO uygulamasını açın.',
+          'Lastik Hizmetleri sekmesine gidin.',
+          'Anlaşmalı lastikçiyi seçin ve randevu alın.',
+          '"LASTIK2026" kodunu ödeme sırasında uygulayın.',
+          '4 lastik değişiminde balans işlemi ücretsiz yapılır.',
+          'Lastikleriniz sezon boyunca güvende saklanır.',
+        ],
+        ctaText: 'Hizmet Al',
       ),
     ];
   }

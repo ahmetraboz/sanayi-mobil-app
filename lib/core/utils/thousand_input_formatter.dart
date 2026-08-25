@@ -43,6 +43,11 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
     return buffer.toString().split('').reversed.join('');
   }
 
+  /// Sayıyı noktalı formata dönüştürür (145000 -> 145.000)
+  static String format(int number) {
+    return _formatWithDots(number.toString());
+  }
+
   /// Sayısal değere dönüştürür (145.000 -> 145000)
   static int parseToInt(String text) {
     final clean = text.replaceAll('.', '').trim();
