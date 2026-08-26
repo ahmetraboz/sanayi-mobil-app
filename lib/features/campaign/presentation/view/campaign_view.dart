@@ -83,12 +83,12 @@ class CampaignView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(),
+      appBar: const AppHeader(title: 'Kampanyalar'),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(
           AppDimensions.p20,
-          AppDimensions.p16,
+          AppDimensions.p8,
           AppDimensions.p20,
           120, // Floating Bottom Nav Bar için güvenli alan
         ),
@@ -96,19 +96,10 @@ class CampaignView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Tüm Kampanyalar',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
               'SanayiGO üyelerine özel indirim ve fırsatları keşfedin.',
               style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             ..._campaigns.map((campaign) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: _CampaignCard(campaign: campaign),

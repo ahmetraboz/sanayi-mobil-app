@@ -31,7 +31,7 @@ class _GarageViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(),
+      appBar: const AppHeader(title: 'Garajım'),
       body: BlocBuilder<GarageCubit, GarageState>(
         builder: (context, state) {
           if (state.status == GarageStatus.loading && state.vehicles.isEmpty) {
@@ -42,26 +42,15 @@ class _GarageViewBody extends StatelessWidget {
 
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.p20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.p20, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Başlık & Açıklama
-                const Text(
-                  'Garajım',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 6),
                 const Text(
                   'Araçlarınızı ekleyin, periyodik bakım ve muayene tarihlerini takip edin.',
                   style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 // Araç Listesi
                 if (state.vehicles.isEmpty)

@@ -11,12 +11,12 @@ class SupportView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(),
+      appBar: const AppHeader(title: 'Destek ve Yardım'),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(
           AppDimensions.p20,
-          AppDimensions.p16,
+          AppDimensions.p8,
           AppDimensions.p20,
           120, // Floating Bottom Nav Bar için güvenli alan
         ),
@@ -24,19 +24,10 @@ class SupportView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Destek ve Yardım',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
               'Sorularınız veya acil yol yardımı için 7/24 yanınızdayız.',
               style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // Acil Yardım Kartı
             Container(
